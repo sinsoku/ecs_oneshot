@@ -1,8 +1,8 @@
 # EcsOneshot
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ecs_oneshot`. To experiment with that code, run `bin/console` for an interactive prompt.
+![Ruby](https://github.com/sinsoku/ecs_oneshot/workflows/Ruby/badge.svg)
 
-TODO: Delete this and the text above, and describe your gem
+A CLI tool that simply executes tasks on AWS Fargate.
 
 ## Installation
 
@@ -22,7 +22,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Quickstart
+
+Run any command with the same configurations as your existing ECS service.
+
+```console
+$ ecs_oneshot --cluster <mycluster> --service <myservice> --container <mycontainer> -- bin/rails -T
+=== Wait for Task Starting...
+=== Following Logs...
+rails about                              # List versions of all Rails frameworks and the environment
+rails app:template                       # Applies the template supplied by LOCATION=(/path/to/template) or URL
+rails app:update                         # Update configs and some other initially generated files (or use just update:configs or update:bin)
+(...)
+
+=== Task Stopped.
+```
+
+### Configuration file
+
+If the configuration file exists, it will be loaded.
+
+```yaml
+# .ecs_oneshot.yml
+---
+production:
+  cluster: mycluster
+  service: myservice
+  container: mycontainer
+```
+
+You can simply execute the command by omitting the arguments.
+
+```console
+$ ecs_oneshot -- echo "hello"
+```
 
 ## Development
 
@@ -32,7 +65,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ecs_oneshot. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/ecs_oneshot/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/sinsoku/ecs_oneshot. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/sinsoku/ecs_oneshot/blob/master/CODE_OF_CONDUCT.md).
 
 
 ## License
@@ -41,4 +74,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the EcsOneshot project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/ecs_oneshot/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the EcsOneshot project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/sinsoku/ecs_oneshot/blob/master/CODE_OF_CONDUCT.md).
