@@ -13,10 +13,10 @@ module EcsOneshot
       end
 
       def load(path, env)
-        raise Error, "'#{path}' not found." unless File.exist?(path)
+        raise Error, "'#{path}' file not found." unless File.exist?(path)
 
         yaml = YAML.load_file(path)
-        raise Error, "'#{env}' not found." unless yaml.key?(env)
+        raise Error, "'#{env}' env not found." unless yaml.key?(env)
 
         options = yaml[env]
         new(**options)
@@ -24,9 +24,11 @@ module EcsOneshot
     end
 
     def save(path, env)
-      raise Error, "already exists at #{path}." if File.exist?(path)
+      raise Error, "already exists at '#{path}'." if File.exist?(path)
 
-      YAML.dump({ env => to_h.transform_keys(&:to_s) }, File.open(path, "w"))
+      File.open(path, "w") do |f|
+        YAML.dump({ env => to_h.transform_keys(&:to_s) }, f)
+      end
     end
 
     def merge(other)

@@ -1,7 +1,17 @@
 # frozen_string_literal: true
 
+require "simplecov"
+SimpleCov.start do
+  load_profile "test_frameworks"
+
+  enable_coverage :branch
+  # TODO: Add test to increase coverage
+  # minimum_coverage 90
+end
+
 require "bundler/setup"
 require "ecs_oneshot"
+require "webmock/rspec"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
