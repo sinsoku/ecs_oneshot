@@ -13,8 +13,15 @@ module EcsOneshot
       it "generates a configuration file" do
         cli.run(["--init"])
 
-        expect(File.read(path))
-          .to eq "---\nproduction:\n  cluster:\n  service:\n  container:\n  command: []\n"
+        yaml = YAML.load_file(path)
+        expect(yaml).to eq(
+          "production" => {
+            "cluster" => nil,
+            "service" => nil,
+            "container" => nil,
+            "command" => []
+          }
+        )
       end
     end
   end

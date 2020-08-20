@@ -61,8 +61,15 @@ module EcsOneshot
         it do
           config.save(path, "production")
 
-          expect(File.read(path))
-            .to eq "---\nproduction:\n  cluster: foo\n  service: bar\n  container: buz\n  command:\n"
+          yaml = YAML.load_file(path)
+          expect(yaml).to eq(
+            "production" => {
+              "cluster" => "foo",
+              "service" => "bar",
+              "container" => "buz",
+              "command" => nil
+            }
+          )
         ensure
           File.delete(path) if File.exist?(path)
         end
