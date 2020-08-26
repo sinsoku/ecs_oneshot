@@ -27,6 +27,8 @@ module EcsOneshot
     end
 
     def each_log(&block)
+      return unless log_configuration
+
       last_event = nil
 
       loop do
@@ -45,15 +47,15 @@ module EcsOneshot
 
     attr_reader :id, :arn, :config, :ecs, :logs
 
-    def log_options
-      @log_options ||= task_definition.container_definitions
-                                      .find { |c| c.name == config.container }
-                                      .log_configuration.options
+    def log_configuration
+      @log_configuration ||= task_definition.container_definitions
+                                            .find { |c| c.name == config.container }
+                                            .log_configuration
     end
 
     def get_log_events(start_time:)
-      awslogs_group = log_options["awslogs-group"]
-      awslogs_stream_prefix = log_options["awslogs-stream-prefix"]
+      awslogs_group = log_configuration.options["awslogs-group"]
+      awslogs_stream_prefix = log_configuration.options["awslogs-stream-prefix"]
 
       resp = logs.get_log_events(
         log_group_name: awslogs_group,
