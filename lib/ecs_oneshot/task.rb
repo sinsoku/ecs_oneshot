@@ -79,17 +79,16 @@ module EcsOneshot
                       .services[0]
     end
 
-    def run_task
-      awsvpc = service.network_configuration.awsvpc_configuration
-      ecs.run_task(
+    def run_task # rubocop:disable Metrics/AbcSize
+      options = {
         cluster: config.cluster,
-        launch_type: "FARGATE",
-        network_configuration: {
-          awsvpc_configuration: { subnets: awsvpc.subnets, security_groups: awsvpc.security_groups }
-        },
+        launch_type: service.launch_type,
         overrides: { container_overrides: [{ name: config.container, command: config.command }] },
         task_definition: task_definition.task_definition_arn
-      )
+      }
+      options[:network_configuration] = service.network_configuration.to_h if service.network_configuration
+
+      ecs.run_task(options)
     end
   end
 end

@@ -3,7 +3,7 @@
 ![Ruby](https://github.com/sinsoku/ecs_oneshot/workflows/Ruby/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/ecs_oneshot.svg)](https://badge.fury.io/rb/ecs_oneshot)
 
-A CLI tool that simply executes tasks on AWS Fargate.
+A CLI tool that simply executes tasks on AWS ECS.
 
 ## Installation
 
