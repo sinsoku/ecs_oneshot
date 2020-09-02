@@ -9,11 +9,7 @@ module EcsOneshot
     def run(args = ARGV)
       options = parse_options(args)
 
-      if options[:init]
-        init_config(options)
-      else
-        run_task(options)
-      end
+      run_task(options)
     rescue Error => e
       warn e.message
       exit 1
@@ -43,13 +39,6 @@ module EcsOneshot
       puts "\n=== Task Stopped."
     end
 
-    def init_config(options)
-      path = options[:config]
-      env = options[:environment]
-
-      Config.safe_build(options).save(path, env)
-    end
-
     def parse_options(args) # rubocop:disable Metrics/MethodLength
       opts = OptionParser.new
       opts.banner = "Usage: ecs_oneshot [options] -- <commmand>"
@@ -60,7 +49,6 @@ module EcsOneshot
       opts.on("--cluster CLUSTER")
       opts.on("--service SERVICE")
       opts.on("--container CONTAINER")
-      opts.on("--init", "Generate a configuration file.")
 
       {}.tap do |h|
         h[:command] = opts.parse(args, into: h)

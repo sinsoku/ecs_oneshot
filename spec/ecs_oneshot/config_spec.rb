@@ -43,39 +43,6 @@ module EcsOneshot
       end
     end
 
-    describe "#save" do
-      let(:config) { Config.new(cluster: "foo", service: "bar", container: "buz") }
-
-      context "file exists" do
-        it do
-          Tempfile.create do |f|
-            expect { config.save(f.path, "production") }
-              .to raise_error(Error, "already exists at '#{f.path}'.")
-          end
-        end
-      end
-
-      context "file does not exist" do
-        let(:path) { "config.yml" }
-
-        it do
-          config.save(path, "production")
-
-          yaml = YAML.load_file(path)
-          expect(yaml).to eq(
-            "production" => {
-              "cluster" => "foo",
-              "service" => "bar",
-              "container" => "buz",
-              "command" => nil
-            }
-          )
-        ensure
-          File.delete(path) if File.exist?(path)
-        end
-      end
-    end
-
     describe "#merge" do
       let(:config) { Config.new(cluster: "foo", service: "bar") }
       let(:other) { Config.new(cluster: "buz") }

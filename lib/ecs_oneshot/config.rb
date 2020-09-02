@@ -23,14 +23,6 @@ module EcsOneshot
       end
     end
 
-    def save(path, env)
-      raise Error, "already exists at '#{path}'." if File.exist?(path)
-
-      File.open(path, "w") do |f|
-        YAML.dump({ env => to_h.transform_keys(&:to_s) }, f)
-      end
-    end
-
     def merge(other)
       new_options = to_h.merge(other.to_h.compact)
       Config.new(**new_options)
