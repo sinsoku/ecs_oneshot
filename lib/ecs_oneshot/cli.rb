@@ -35,8 +35,7 @@ module EcsOneshot
     def run_task(config)
       raise Error, "<command> is required." if config.command.empty?
 
-      t = Task.new(config)
-      t.run
+      t = Task.run(config)
       puts "Task started. Watch this task's details in the Amazon ECS console: #{t.console_url}\n\n"
       puts "=== Wait for Task Starting..."
       t.wait_running

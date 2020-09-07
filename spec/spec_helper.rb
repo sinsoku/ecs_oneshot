@@ -5,8 +5,7 @@ SimpleCov.start do
   load_profile "test_frameworks"
 
   enable_coverage :branch
-  # TODO: Add test to increase coverage
-  # minimum_coverage 90
+  minimum_coverage 90
 end
 
 require "bundler/setup"
@@ -24,3 +23,8 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+Aws.config.update({
+   credentials: Aws::Credentials.new("access_key_id", "secret_access_key"),
+   region: "us-west-1"
+})

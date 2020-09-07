@@ -5,23 +5,64 @@ require "aws-sdk-ecs"
 
 module EcsOneshot
   class Task
+    class << self
+      def run(config)
+        service = desc_service(config)
+        task_definition = desc_task_definition(config.task_definition || service.task_definition)
+        task = run_task(config, service, task_definition)
+
+        new(config: config, arn: task.task_arn, task_definition: task_definition)
+      end
+
+      private
+
+      def ecs
+        Aws::ECS::Client.new
+      end
+
+      def desc_service(config)
+        ecs.describe_services(cluster: config.cluster, services: [config.service])
+           .services[0]
+      end
+
+      def desc_task_definition(task_definition)
+        ecs.describe_task_definition(task_definition: task_definition)
+           .task_definition
+      end
+
+      def run_task(config, service, task_definition)
+        options = {
+          cluster: config.cluster,
+          launch_type: service.launch_type,
+          overrides: { container_overrides: [{ name: config.container, command: config.command }] },
+          task_definition: task_definition.task_definition_arn
+        }
+        options[:network_configuration] = service.network_configuration.to_h if service.network_configuration
+
+        ecs.run_task(options)
+           .tasks[0]
+      end
+    end
+
     # Number of seconds between API calls to get CloudWatch Logs
     WAIT_TIME = 10
 
-    def initialize(config)
+    attr_reader :arn
+
+    def initialize(config:, arn:, task_definition:)
       @config = config
+      @arn = arn
+      @task_definition = task_definition
       @ecs = Aws::ECS::Client.new
       @logs = Aws::CloudWatchLogs::Client.new
     end
 
-    def run
-      resp = run_task
-      @arn = resp.tasks[0].task_arn
-      @id = @arn.split("/").last
+    def id
+      @id ||= arn.split("/").last
     end
 
     def console_url
-      "https://console.aws.amazon.com/ecs/home?#{ecs.config.region}#/clusters/#{config.cluster}/tasks/#{@id}/details"
+      "https://console.aws.amazon.com/ecs/home?#{ecs.config.region}#/clusters/#{config.cluster}/tasks/#{id}/details"
     end
 
     def wait_running
@@ -49,7 +90,7 @@ module EcsOneshot
 
     private
 
-    attr_reader :id, :arn, :config, :ecs, :logs
+    attr_reader :config, :task_definition, :ecs, :logs
 
     def log_configuration
       @log_configuration ||= task_definition.container_definitions
@@ -67,31 +108,6 @@ module EcsOneshot
         start_time: start_time
       )
       resp.events
-    end
-
-    def task_definition
-      return @task_definition if @task_definition
-
-      task_definition = config.task_definition || service.task_definition
-      @task_definition = ecs.describe_task_definition(task_definition: task_definition)
-                            .task_definition
-    end
-
-    def service
-      @service ||= ecs.describe_services(cluster: config.cluster, services: [config.service])
-                      .services[0]
-    end
-
-    def run_task # rubocop:disable Metrics/AbcSize
-      options = {
-        cluster: config.cluster,
-        launch_type: service.launch_type,
-        overrides: { container_overrides: [{ name: config.container, command: config.command }] },
-        task_definition: task_definition.task_definition_arn
-      }
-      options[:network_configuration] = service.network_configuration.to_h if service.network_configuration
-
-      ecs.run_task(options)
     end
   end
 end
