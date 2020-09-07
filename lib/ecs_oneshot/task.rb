@@ -20,6 +20,10 @@ module EcsOneshot
       @id = @arn.split("/").last
     end
 
+    def console_url
+      "https://console.aws.amazon.com/ecs/home?#{ecs.config.region}#/clusters/#{config.cluster}/tasks/#{@id}/details"
+    end
+
     def wait_running
       ecs.wait_until(:tasks_running, cluster: config.cluster, tasks: [arn])
     rescue Aws::Waiters::Errors::WaiterFailed

@@ -32,6 +32,7 @@ module EcsOneshot
 
       t = Task.new(config)
       t.run
+      puts "Task started. Watch this task's details in the Amazon ECS console: #{t.console_url}\n\n"
       puts "=== Wait for Task Starting..."
       t.wait_running
       puts "=== Following Logs..."
