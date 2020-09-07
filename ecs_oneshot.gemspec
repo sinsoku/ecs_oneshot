@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Takumi Shotoku"]
   spec.email         = ["sinsoku.listy@gmail.com"]
 
-  spec.summary       = "A CLI tool that simply executes tasks on AWS Fargate."
+  spec.summary       = "Provides a simple way to run one-shot tasks using the ECS runTask API."
   spec.description   = spec.summary
   spec.homepage      = "https://github.com/sinsoku/ecs_oneshot"
   spec.license       = "MIT"
