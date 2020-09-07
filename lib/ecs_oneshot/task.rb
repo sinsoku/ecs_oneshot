@@ -69,7 +69,7 @@ module EcsOneshot
       return @task_definition if @task_definition
 
       # NOTE: Delete a version to use latest task definition
-      task_definition = service.task_definition.sub(/:\d+$/, "")
+      task_definition = config.task_definition || service.task_definition.sub(/:\d+$/, "")
       @task_definition = ecs.describe_task_definition(task_definition: task_definition)
                             .task_definition
     end

@@ -39,7 +39,7 @@ module EcsOneshot
       puts "\n=== Task Stopped."
     end
 
-    def parse_options(args) # rubocop:disable Metrics/MethodLength
+    def parse_options(args) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       opts = OptionParser.new
       opts.banner = "Usage: ecs_oneshot [options] -- <commmand>"
       opts.version = VERSION
@@ -48,12 +48,14 @@ module EcsOneshot
       opts.on("-e", "--environment ENVIRONMENT", "Specify environment. (default: production)")
       opts.on("--cluster CLUSTER")
       opts.on("--service SERVICE")
+      opts.on("--task-definition TASK_DEFINITION")
       opts.on("--container CONTAINER")
 
       {}.tap do |h|
         h[:command] = opts.parse(args, into: h)
         h[:config] ||= ".ecs_oneshot.yml"
         h[:environment] ||= "production"
+        h[:task_definition] = h.delete(:"task-definition")
       end
     end
   end

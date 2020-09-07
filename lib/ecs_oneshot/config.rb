@@ -3,7 +3,7 @@
 require "yaml"
 
 module EcsOneshot
-  Config = Struct.new(:cluster, :service, :container, :command, keyword_init: true)
+  Config = Struct.new(:cluster, :service, :container, :task_definition, :command, keyword_init: true)
 
   class Config
     class << self
