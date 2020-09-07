@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ecs_oneshot (0.1.1)
+    ecs_oneshot (1.0.0)
       aws-sdk-cloudwatchlogs
       aws-sdk-ecs
 
