@@ -3,7 +3,7 @@
 ![Ruby](https://github.com/sinsoku/ecs_oneshot/workflows/Ruby/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/ecs_oneshot.svg)](https://badge.fury.io/rb/ecs_oneshot)
 
-A CLI tool that simply executes tasks on AWS ECS.
+Provides a simple way to run one-shot tasks using the ECS runTask API.
 
 ## Installation
 
@@ -23,12 +23,21 @@ Or install it yourself as:
 
 ## Usage
 
-### Quickstart
+```
+Usage: ecs_oneshot [options] -- <commmand>
+    -c, --config FILE                Specify configuration file. (default: .ecs_oneshot.yml)
+    -e, --environment ENVIRONMENT    Specify environment. (default: production)
+        --cluster CLUSTER
+        --service SERVICE
+        --task-definition TASK_DEFINITION
+        --container CONTAINER
+```
 
-Run any command with the same configurations as your existing ECS service.
+## Example
 
 ```console
-$ ecs_oneshot --cluster <mycluster> --service <myservice> --container <mycontainer> -- bin/rails -T
+$ ecs_oneshot --cluster mycluster --service myservice --task-definition rails-app:1 --container app -- bin/rails -T
+Task started. Watch this task's details in the Amazon ECS console: https://console.aws.amazon.com/ecs/home?ap-northeast-1#/clusters/default/tasks/00000000-1234-5678-9000-aaaaaaaaaaaa/details
 === Wait for Task Starting...
 === Following Logs...
 rails about                              # List versions of all Rails frameworks and the environment
@@ -49,6 +58,7 @@ If the configuration file exists, it will be loaded.
 production:
   cluster: mycluster
   service: myservice
+  task_definition: task-def
   container: mycontainer
 ```
 
