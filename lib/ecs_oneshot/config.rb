@@ -7,11 +7,6 @@ module EcsOneshot
 
   class Config
     class << self
-      def safe_build(attributes)
-        safe_attributes = attributes.slice(*members)
-        new(**safe_attributes)
-      end
-
       def load(path, env)
         raise Error, "'#{path}' file not found." unless File.exist?(path)
 

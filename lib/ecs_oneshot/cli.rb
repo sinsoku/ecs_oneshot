@@ -8,8 +8,9 @@ module EcsOneshot
   class CLI
     def run(args = ARGV)
       options = parse_options(args)
+      config = load_config(options)
 
-      run_task(options)
+      run_task(config)
     rescue Error => e
       warn e.message
       exit 1
@@ -18,16 +19,20 @@ module EcsOneshot
     private
 
     def load_config(options)
-      path = options[:config]
-      env = options[:environment]
-      config = File.exist?(path) ? Config.load(path, env) : Config.new
+      opts = options.dup
 
-      other = Config.safe_build(options)
-      config.merge(other)
+      path = opts.delete(:config)
+      env = opts.delete(:environment)
+      cli_config = Config.new(**opts)
+
+      if File.exist?(path)
+        Config.load(path, env).merge(cli_config)
+      else
+        cli_config
+      end
     end
 
-    def run_task(options)
-      config = load_config(options)
+    def run_task(config)
       raise Error, "<command> is required." if config.command.empty?
 
       t = Task.new(config)

@@ -2,14 +2,6 @@
 
 module EcsOneshot
   RSpec.describe Config do
-    describe ".safe_build" do
-      subject { Config.safe_build({ cluster: "foo", env: "production" }) }
-
-      it "returns an object using only attribute keys" do
-        is_expected.to eq Config.new(cluster: "foo")
-      end
-    end
-
     describe ".load" do
       context "file exists" do
         it do
