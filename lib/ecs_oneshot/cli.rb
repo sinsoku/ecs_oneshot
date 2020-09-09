@@ -42,7 +42,7 @@ module EcsOneshot
 
     def parse_options(args) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       opts = OptionParser.new
-      opts.banner = "Usage: ecs_oneshot [options] -- <commmand>"
+      opts.banner = "Usage: ecs_oneshot [options] -- <command>"
       opts.version = VERSION
 
       opts.on("-c", "--config FILE", "Specify configuration file. (default: .ecs_oneshot.yml)")

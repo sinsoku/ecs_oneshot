@@ -24,7 +24,7 @@ Or install it yourself as:
 ## Usage
 
 ```
-Usage: ecs_oneshot [options] -- <commmand>
+Usage: ecs_oneshot [options] -- <command>
     -c, --config FILE                Specify configuration file. (default: .ecs_oneshot.yml)
     -e, --environment ENVIRONMENT    Specify environment. (default: production)
         --cluster CLUSTER
