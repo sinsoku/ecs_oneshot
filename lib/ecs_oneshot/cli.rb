@@ -7,8 +7,7 @@ require "aws-sdk-cloudwatchlogs"
 module EcsOneshot
   class CLI
     def run(args = ARGV)
-      options = parse_options(args)
-      config = load_config(options)
+      config = load_config(args)
 
       run_task(config)
     rescue Error => e
@@ -16,14 +15,12 @@ module EcsOneshot
       exit 1
     end
 
-    private
+    def load_config(args)
+      options = parse_options(args)
 
-    def load_config(options)
-      opts = options.dup
-
-      path = opts.delete(:config)
-      env = opts.delete(:environment)
-      cli_config = Config.new(**opts)
+      path = options.delete(:config)
+      env = options.delete(:environment)
+      cli_config = Config.new(**options)
 
       if File.exist?(path)
         Config.load(path, env).merge(cli_config)
@@ -31,6 +28,8 @@ module EcsOneshot
         cli_config
       end
     end
+
+    private
 
     def run_task(config)
       raise Error, "<command> is required." if config.command.empty?
